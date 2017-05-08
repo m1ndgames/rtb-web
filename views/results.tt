@@ -1,0 +1,7 @@
+<div id="page">
+      <% PROCESS sidebar.tt %>
+      <div id="content">
+        <% PROCESS header.tt %>
+        Nothing Yet...
+      </div>
+</div>

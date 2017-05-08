@@ -1,0 +1,16 @@
+<div id="page">
+      <% PROCESS sidebar.tt %>
+      <div id="content">
+        <% PROCESS header.tt %>
+        <h1>Login</h1>
+
+        <form method="post">
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username">
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password">
+        <br />
+        <input type="submit" value="Login">
+      </form>
+    </div>
+</div>

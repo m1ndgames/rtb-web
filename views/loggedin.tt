@@ -1,0 +1,9 @@
+<div id="page">
+      <% PROCESS sidebar.tt %>
+      <div id="content">
+        <% PROCESS header.tt %>
+        <h1>Hi <% name %></h1>
+
+        <p>Hi <% name %>! You have successfully logged in.</p>
+      </div>
+</div>

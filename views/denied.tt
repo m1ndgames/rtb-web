@@ -1,0 +1,9 @@
+<div id="page">
+      <% PROCESS sidebar.tt %>
+      <div id="content">
+        <% PROCESS header.tt %>
+        <h1>Permission Denied</h1>
+
+        <p>You have to <a href="https://rtb.m1nd.io/login">login</a> first.</p>
+      </div>
+</div>

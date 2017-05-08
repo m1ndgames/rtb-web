@@ -1,0 +1,11 @@
+<div id="page">
+      <% PROCESS sidebar.tt %>
+      <div id="content">
+        <% PROCESS header.tt %>
+        <form method="POST">
+        Username: <input type="text" name="username"><br>
+        Password: <input type="password" name="password"><br>
+        Email: <input type="text" name="email"><br>
+        <input type="submit" value="register">
+      </div>
+</div>

@@ -1,0 +1,52 @@
+<div id="page">
+      <% PROCESS sidebar.tt %>
+      <div id="content">
+      <% PROCESS header.tt %>
+          <ol>
+              <h2>About RealTimeBattle...</h2>
+              <p>
+               RealTimeBattle is a programming game, in which robots controlled<br>
+               by programs are fighting each other.<br><br>
+               The goal is to destroy the enemies, using the radar to examine<br>
+               the environment and the cannon to shoot.<br>
+               <br>
+
+               Features of RealTimeBattle:
+               <UL>
+               <LI> Game progresses in real time, with the robot programs running as child processes to RealTimeBattle.
+               <LI> The robots communicate with the main program using the standard input and output.
+               <LI> Robots can be constructed in almost any programming language.
+               <LI> Any number of robots can compete simultaneously.
+               <LI> A simple messaging language is used for communication, which makes it easy to start constructing robots.
+               <LI> Robots behave like real physical object.
+               <LI> You can create your own arenas.
+               <LI> Highly configurable.
+               <LI> It is distributed under the <A href="http://www.gnu.org/copyleft/gpl.html" target="_blank">General Public License (GPL)</A>.
+               </UL>
+
+              </p>
+
+              <h2>Getting started</h2>
+              <h3>1) Download RealTimeBattle</h3>
+              <p>
+              You can download RealTimeBattle from the RTB Homepage or your favourite package manager.
+              There is also a windows port available.
+              </p>
+
+              <h3>2) Code your Bot</h3>
+              <p>
+              <a href="http://realtimebattle.sourceforge.net/Documentation/RealTimeBattle.html">RTFM</a> and start coding in your favourite coding language.
+              (See <a href="https://rtb.m1nd.io/rules">rules</a> for more information)
+              </p>
+
+              <h3>3) Submit your Bot</h3>
+              <p>
+              To compete against other players in the arena, your need to <a href="https://rtb.m1nd.io/register">register</a> on the website
+              and upload your compiled bot. A new round is started every hour. Results are available
+              as <a href="https://rtb.m1nd.io/results">table</a>, or as <a href="https://rtb.m1nd.io/video">video</a>.
+              </p>
+
+          </ol>
+        </div>
+      </div>
+    </div>

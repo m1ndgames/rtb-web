@@ -1,0 +1,8 @@
+<div id="page">
+      <% PROCESS sidebar.tt %>
+      <div id="content">
+        <% PROCESS header.tt %>
+        this is just a demo...
+        <iframe width="500" height="300" src="https://www.youtube.com/embed/lTtvbxNsfRA" frameborder="0" allowfullscreen></iframe>
+      </div>
+</div>

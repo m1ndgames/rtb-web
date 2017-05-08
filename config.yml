@@ -1,0 +1,71 @@
+appname: "RTB::Web"
+layout: "main"
+charset: "UTF-8"
+template: "template_toolkit"
+session: Cookie
+
+engines:
+  template:
+    template_toolkit:
+      start_tag: '<%'
+      end_tag:   '%>'
+      COMPILE_DIR: 'caches/templates'
+      COMPILE_EXT: '.tt'
+  session:
+    Cookie:
+      secret_key: 'nv8ong038nmkjwnvwtjongopitun3h06nzb3806bhz0'
+      default_duration: 60480
+  logger:
+    Console::Colored:
+      colored_origin: "cyan"
+      colored_levels:
+        core: "bold bright_white"
+        debug: "bold bright_blue"
+        info: "bold green"
+        warning: "bold yellow"
+        error: "bold yellow on_red"
+      colored_messages:
+        core: "bold bright_white"
+        debug: "bold bright_blue"
+        info: "bold green"
+        warning: "bold yellow"
+        error: "bold yellow on_red"
+
+plugins:
+  Emailesque:
+    from: rtb@m1nd.io
+    ssl: 1
+    driver: smtp
+    host: localhost
+    port: 465
+    user: rtb@m1nd.io
+    pass: gb978302h849
+  Auth::Extensible:
+    disable_roles: 0
+    no_default_pages: 1
+    no_login_handler: 1
+    login_page_handler: 'RTB::Web:login_page_handler'
+    permission_denied_page_handler: 'RTB::Web:permission_denied_page_handler'
+    realms:
+      users:
+        provider: 'Database'
+  Database:
+    driver: mysql
+    host: localhost
+    database: 'rtb'
+    username: root
+    password: <PASSWORD>
+    connection_check_threshold: 10
+    dbi_params:
+      RaiseError: 1
+      AutoCommit: 1
+    on_connect_do: ["SET NAMES 'utf8'", "SET CHARACTER SET 'utf8'" ]
+    users_table: 'users'
+    roles_table: 'roles'
+    users_id_column: 'id'
+    users_username_column: 'username'
+    users_password_column: 'password'
+    roles_id_column: 'id'
+    roles_role_column: 'role'
+    user_roles_user_id_column: 'user_id'
+    user_roles_role_id_column: 'roles_id'
