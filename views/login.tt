@@ -2,7 +2,7 @@
       <% PROCESS sidebar.tt %>
       <div id="content">
         <% PROCESS header.tt %>
-        <h1>Login</h1>
+          <h1>Login</h1>
 
         <form method="post">
         <label for="username">Username:</label>

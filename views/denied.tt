@@ -4,6 +4,6 @@
         <% PROCESS header.tt %>
         <h1>Permission Denied</h1>
 
-        <p>You have to <a href="https://rtb.m1nd.io/login">login</a> first.</p>
+        <p>You have to <a href="/login">login</a> first.</p>
       </div>
 </div>

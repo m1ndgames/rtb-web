@@ -3,12 +3,13 @@
           <li>
             <h3>user</h3>
             <ul class="links">
-              <% IF !session.logged_in %>
-              <li><a href="https://rtb.m1nd.io/login">login</a></li>
-              <li><a href="https://rtb.m1nd.io/register">register</a></li>
+              <% IF login_failed %>
+              <li><a href="/login">login</a></li>
+              <li><a href="/register">register</a></li>
               <% ELSE %>
-              <li><a href="https://rtb.m1nd.io/logout">logout</a></li>
-              <li><a href="https://rtb.m1nd.io/profile">profile</a></li>
+              <li><a href="/profile">profile</a></li>
+              <li><a href="/upload">upload</a></li>
+              <li><a href="/logout">logout</a></li>
               <% END %>
               <li><a href="https://chat.m1nd.io/#/room/#realtimebattle:m1nd.io">matrix</a></li>
             </ul>
@@ -18,20 +19,18 @@
             <h3>arena</h3>
             <ul class="links">
               <li>
-              <% IF session.logged_in %>
-              <li><a href="https://rtb.m1nd.io/upload">upload</a></li>
-              <% END %>
-              <li><a href="https://rtb.m1nd.io/rules">rules</a></li>
-              <li><a href="https://rtb.m1nd.io/results">results</a></li>
-              <li><a href="https://rtb.m1nd.io/video">video</a></li>
+              <li><a href="/results">results</a></li>
+              <li><a href="/rules">rules</a></li>
+              <li><a href="/video">video</a></li>
             </ul>
           </li>
 
           <li>
             <h3>links</h3>
             <ul class="links">
-              <li><a href="http://realtimebattle.sourceforge.net/">RealTimeBattle</a></li>
-              <li><a href="https://github.com/mdtrooper/RealTimeBattle_reloaded">RealTimeBattle Reloaded</a></li>
+              <li><a href="https://github.com/Dentosal/python-sc2">python-sc2</a></li>
+              <li><a href="https://github.com/Blizzard/s2client-proto#downloads">StarCraft II</a></li>
+              <li><a href="https://sc2ai.net">Starcraft 2 AI Ladder</a></li>
             </ul>
           </li>
         </ul>

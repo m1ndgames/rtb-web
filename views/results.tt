@@ -2,6 +2,6 @@
       <% PROCESS sidebar.tt %>
       <div id="content">
         <% PROCESS header.tt %>
-        Nothing Yet...
+          Nothing Yet...
       </div>
 </div>

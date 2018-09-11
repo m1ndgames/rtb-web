@@ -2,6 +2,6 @@
       <% PROCESS sidebar.tt %>
       <div id="content">
         <% PROCESS header.tt %>
-          You have successfully registered!
+          Success!
       </div>
 </div>

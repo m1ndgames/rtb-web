@@ -2,8 +2,10 @@
       <% PROCESS sidebar.tt %>
       <div id="content">
         <% PROCESS header.tt %>
-        <form action="/upload" method="POST" enctype="multipart/form-data">
+          <form action="/upload" method="POST" enctype="multipart/form-data">
         <input type="file" name="file">
+	<label for="username">Botname:</label>
+        <input type="text" name="botname" id="botname">
         <input type="submit" name="submit" value="Upload">
         </form>
       </div>
