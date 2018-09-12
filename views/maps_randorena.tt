@@ -2,8 +2,6 @@
       <% PROCESS sidebar.tt %>
       <div id="content">
         <% PROCESS header.tt %>
-          <h1>Hi <% username %></h1>
-
-        <p>Hi <% username %>! You have successfully logged in.</p>
+          <h3>RandoRena</h3>
       </div>
 </div>

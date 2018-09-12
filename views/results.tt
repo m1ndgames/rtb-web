@@ -2,6 +2,26 @@
       <% PROCESS sidebar.tt %>
       <div id="content">
         <% PROCESS header.tt %>
-          Nothing Yet...
+<h3>Results:</h3>
+<table>
+<tbody>
+<tr>
+<td>Bot A</td>
+<td>Bot B</td>
+<td>Result</td>
+<td>ELO +/-</td>
+<td>Replay</td>
+</tr>
+          <% FOREACH result IN results %>
+<tr>
+<td><% result.bot_a %></td>
+<td><% result.bot_b %></td>
+<td><% result.result %></td>
+<td><% result.elochange %></td>
+<td><% result.replay %></td>
+</tr>
+          <% END %>
+</tbody>
+</table>
       </div>
 </div>

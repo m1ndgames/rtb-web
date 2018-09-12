@@ -2,6 +2,38 @@
       <% PROCESS sidebar.tt %>
       <div id="content">
         <% PROCESS header.tt %>
-          Welcome!
+          <h3>Profile</h3>
+<table>
+<tbody>
+<tr>
+<td>Name</td>
+<td>ELO</td>
+<td>Joined</td>
+<td>Updated</td>
+<td>Status</td>
+</tr>
+          <% FOREACH bot IN bots %>
+<tr>
+<td><% bot.name %></td>
+<td><% bot.elo %></td>
+<td><% bot.first_upload_date %></td>
+<td><% bot.last_upload_date %></td>
+<td>
+<form action="/profile" method=post>
+<% IF bot.active %>
+<input type=hidden name=action value=deactivate>
+<input type=hidden name=botname value=<% bot.name %>>
+<input type=submit value=Deactivate>
+<% ELSE %>
+<input type=hidden name=action value=activate>
+<input type=hidden name=botname value=<% bot.name %>>
+<input type=submit value=Activate>
+<% END %>
+</form>
+</td>
+</tr>
+          <% END %>
+</tbody>
+</table>
       </div>
 </div>

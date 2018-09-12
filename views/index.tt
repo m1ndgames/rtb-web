@@ -3,7 +3,7 @@
       <div id="content">
         <% PROCESS header.tt %>
           <ol>
-              <h3>Soon....</h3>
+              <h3>Soon...</h3>
           </ol>
         </div>
       </div>

@@ -1,0 +1,24 @@
+<div id="page">
+      <% PROCESS sidebar.tt %>
+      <div id="content">
+        <% PROCESS header.tt %>
+<h3>Ranking:</h3>
+
+<table>
+<tbody>
+<tr>
+<td>ELO</td>
+<td>Name</td>
+<td>Author</td>
+</tr>
+          <% FOREACH bot IN bots %>
+<tr>
+<td><% bot.elo %></td>
+<td><% bot.name %></td>
+<td><% bot.author_name %></td>
+</tr>
+          <% END %>
+</tbody>
+</table>
+      </div>
+</div>

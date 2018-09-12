@@ -1,0 +1,30 @@
+<div id="page">
+      <% PROCESS sidebar.tt %>
+      <div id="content">
+        <% PROCESS header.tt %>
+          <h3>Maps</h3>
+		  <table>
+		  <tbody>
+			<tr>
+			<td><img src="/images/maps/maps_randorena_small.png" alt="maps_randorena_small" /></td>
+			<td><a href="/maps/randorena">RandoRena</a><br />
+			Two-Player fights with random Units
+			</td>
+			</tr>
+			<tr>
+			<td><img src="/images/maps/maps_randorena_small.png" alt="maps_randorena_small" /></td>
+			<td><a href="/maps">TBD</a><br />
+			Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+			</td>
+			</tr>
+			<tr>
+			<td><img src="/images/maps/maps_randorena_small.png" alt="maps_randorena_small" /></td>
+			<td><a href="/maps">TBD</a><br />
+			Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+			</td>
+		  </tr>
+		</tbody>
+	  </table>
+	  <a href="/downloads/mappack.zip">Download</a> the map pack.</div>
+    </div>
+</div>

@@ -2,7 +2,12 @@
       <% PROCESS sidebar.tt %>
       <div id="content">
         <% PROCESS header.tt %>
-          <form action="/upload" method="POST" enctype="multipart/form-data">
+        <H3>Rules:</H3>
+        <li>Must be packed using zip, max size 10 MB</li>
+        <li>Uses either pysc2 or python-sc2 api wrapper</li>
+        <li>Python Version: 3.6</li>
+        <br>
+        <form action="/upload" method="POST" enctype="multipart/form-data">
         <input type="file" name="file">
 	<label for="username">Botname:</label>
         <input type="text" name="botname" id="botname">

@@ -1,8 +1,8 @@
 appname: "RTB::Web"
 layout: "main"
 charset: "UTF-8"
+session: Memcached
 template: "template_toolkit"
-session: Cookie
 
 engines:
   template:
@@ -12,9 +12,9 @@ engines:
       COMPILE_DIR: 'caches/templates'
       COMPILE_EXT: '.tt'
   session:
-    Cookie:
-      secret_key: 'nv8ong038nmkjwnvwtjongopitun3h06nzb3806bhz0'
-      default_duration: 60480
+    Memcached:
+      memcached_servers: 
+        - 127.0.0.1:11211
   logger:
     Console::Colored:
       colored_origin: "cyan"
@@ -33,15 +33,15 @@ engines:
 
 plugins:
   Emailesque:
-    from: rtb@m1nd.io
+    from: info@ai-arena.net
     ssl: 1
     driver: smtp
     host: localhost
     port: 465
-    user: rtb@m1nd.io
-    pass: gb978302h849
+    user: info@ai-arena.net
+    pass: ***
   Auth::Extensible:
-    disable_roles: 0
+    disable_roles: 1
     no_default_pages: 1
     no_login_handler: 1
     login_page_handler: 'RTB::Web:login_page_handler'
@@ -52,20 +52,15 @@ plugins:
   Database:
     driver: mysql
     host: localhost
-    database: 'rtb'
-    username: root
-    password: <PASSWORD>
+    database: 'aiarena_db_1'
+    username: aiarena
+    password: ***
     connection_check_threshold: 10
     dbi_params:
       RaiseError: 1
       AutoCommit: 1
     on_connect_do: ["SET NAMES 'utf8'", "SET CHARACTER SET 'utf8'" ]
     users_table: 'users'
-    roles_table: 'roles'
     users_id_column: 'id'
     users_username_column: 'username'
     users_password_column: 'password'
-    roles_id_column: 'id'
-    roles_role_column: 'role'
-    user_roles_user_id_column: 'user_id'
-    user_roles_role_id_column: 'roles_id'
