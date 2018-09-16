@@ -4,7 +4,7 @@
         <% PROCESS header.tt %>
 <h3>Ranking:</h3>
 
-<table>
+<table id="resultsTable">
 <tbody>
 <tr>
 <td>ELO</td>
@@ -14,7 +14,7 @@
           <% FOREACH bot IN bots %>
 <tr>
 <td><% bot.elo %></td>
-<td><% bot.name %></td>
+<td><a href="/bot/<% bot.name %>"><% bot.name %></a></td>
 <td><% bot.author_name %></td>
 </tr>
           <% END %>
@@ -22,3 +22,32 @@
 </table>
       </div>
 </div>
+
+
+<body onload="sortTable();">
+
+<script>
+function sortTable() {
+  var table, rows, switching, i, x, y, shouldSwitch;
+  table = document.getElementById("resultsTable");
+  switching = true;
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("TD")[0];
+      y = rows[i + 1].getElementsByTagName("TD")[0];
+      if (Number(x.innerHTML) < Number(y.innerHTML)) {
+        shouldSwitch = true;
+        break;
+      }
+    }
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+    }
+  }
+}
+</script>
+

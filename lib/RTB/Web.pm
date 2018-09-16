@@ -6,10 +6,11 @@ use Dancer2::Plugin::Passphrase;
 use Dancer2::Template::TemplateToolkit;
 use Dancer2::Session::Memcached;
 use Template;
-use Chess::Elo qw(:all);
 use VT::API;
 use Data::Dumper;
 use POSIX qw(strftime);
+use File::Slurp;
+use utf8;
 
 # Defines #############################################################################
 set behind_proxy => true;
@@ -67,8 +68,6 @@ get '/api/nextmatch' => sub {
     );
     $sth->execute();
     my $bots = $sth->fetchall_arrayref({});
-
-print Dumper($bots);
     my $json = JSON->new->allow_nonref;
     my $pretty_json = $json->pretty->encode( $bots );
     return($pretty_json);
@@ -96,7 +95,7 @@ get '/stream' => sub {
 
 get '/results' => sub {
     my $sth = database->prepare(
-        'SELECT * FROM results',
+        'SELECT * FROM results ORDER BY id DESC LIMIT 25',
     );
     $sth->execute();
     my $results = $sth->fetchall_arrayref({});
@@ -112,6 +111,22 @@ get '/ranking' => sub {
     my $bots = $sth->fetchall_arrayref({});
 
     template 'ranking' => { bots => $bots}
+};
+
+get '/bot/:name' => sub {
+    my $name = route_parameters->get('name');
+    my $sth = database->prepare(
+        'SELECT * FROM bots where name = ?',
+    );
+    $sth->execute($name);
+    my $bot_table = $sth->fetchall_arrayref({});
+    my $sth2 = database->prepare(
+        'SELECT * FROM results where bot_a = ? OR bot_b = ?',
+    );
+    $sth2->execute($name, $name);
+    my $results_table = $sth2->fetchall_arrayref({});
+
+    template 'bot' => { bots=> $bot_table, results=> $results_table };
 };
 
 get '/maps' => sub {
@@ -190,22 +205,90 @@ post '/download' => sub {
 post '/api/results' => sub {
     my $params = params;
     my $client_key = $params->{'apikey'};
-    my $bot = $params->{'bot'};
-
-    my $sth = database->prepare(
-        'SELECT filename FROM bots WHERE name = ?',
-    );
-    $sth->execute($bot);
-    my @botfilename = $sth->fetchrow_array;
-    chomp(my $dir = path(config->{appdir}, 'botuploads'));
-    my $botfile = "$dir/$botfilename[0]";
+    my $bot_a = $params->{'bot_a'};
+    my $bot_b = $params->{'bot_b'};
+    my $result = $params->{'result'};
+    my $winner = $params->{'winner'};
+    my $gametime = $params->{'gametime'};
+    my $mapname = $params->{'map'};
+    my $replayname = $params->{'replayname'};
 
     if ($client_key eq $apikey) {
-        #return send_file($botfile, system_path => 1);
+        my $sth = database->prepare(
+    	    'SELECT elo FROM bots WHERE name = ?',
+        );
+        $sth->execute($bot_a);
+        my @bot_a_elo = $sth->fetchrow_array;
+
+        my $sth2 = database->prepare(
+            'SELECT elo FROM bots WHERE name = ?',
+        );
+        $sth2->execute($bot_b);
+        my @bot_b_elo = $sth2->fetchrow_array;
+
+        my $result_a;
+        my $result_b;
+        if (($result eq 'Player1Win') || ($result eq 'Player2Crash')) {
+	    $result_a = &elo($bot_a_elo[0], $bot_b_elo[0], 1.0);
+            $result_b = &elo($bot_b_elo[0], $bot_a_elo[0], 0.0);
+        } elsif (($result eq 'Player2Win') || ($result eq 'Player1Crash')) {
+            $result_a = &elo($bot_a_elo[0], $bot_b_elo[0], 0.0);
+            $result_b = &elo($bot_b_elo[0], $bot_a_elo[0], 1.0);
+        } elsif (($result eq 'GameTimeout') || ($result eq 'Tie')) {
+            $result_a = &elo($bot_a_elo[0], $bot_b_elo[0], 0.5);
+            $result_b = &elo($bot_b_elo[0], $bot_a_elo[0], 0.5);
+        }
+
+	my $elo_a_change = $bot_a_elo[0] - $result_a;
+        my $elo_b_change = $bot_b_elo[0] - $result_b;
+
+        my $sql3 = 'insert into results (bot_a, bot_b, result, elochange_bot_a, elochange_bot_b, mapname, gametime, winner, replayname) values (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        my $sth3 = database->prepare($sql3) or die database->errstr;
+        $sth3->execute($bot_a, $bot_b, $result, $elo_a_change, $elo_b_change, $mapname, $gametime, $winner, $replayname) or die $sth3->errstr;
+
+        my $sql4 = 'update bots set elo = ? where name = ?';
+        my $sth4 = database->prepare($sql4) or die database->errstr;
+        $sth4->execute($result_a, $bot_a) or die $sth4->errstr;
+
+        my $sql5 = 'update bots set elo = ? where name = ?';
+        my $sth5 = database->prepare($sql5) or die database->errstr;
+        $sth5->execute($result_b, $bot_b) or die $sth5->errstr;
+
     } else {
         return "nope";
     }
 };
+
+post '/api/uploadreplay' => sub {
+    my $params = params;
+    my $client_key = $params->{'apikey'};
+    my $filename = $params->{'filename'};
+
+    if ($client_key eq $apikey) {
+        my $path = "./public/replays/$filename";
+	open my $fh, '>:encoding(UTF-8)', $path or die "Couldn't write '$path': $!";
+	print $fh $params->{'replay'};
+
+    } else {
+         return "nope";
+    }
+};
+
+sub expected_win_rate  {
+	my $rating1 = shift;
+	my $rating2 = shift;
+	return 1.0 / (1.0 + 10.0 ** (($rating2 - $rating1) / 400.0));
+}
+
+sub elo {
+	my $rating1 = shift;
+	my $rating2 = shift;
+	my $actual = shift;
+	my $elo_k = 24;
+
+	my $delta = $elo_k * ($actual - &expected_win_rate($rating1, $rating2));
+	return ($rating1 + $delta, $rating2 - $delta);
+}
 
 post '/register' => sub {
     my $username = body_parameters->get('username');

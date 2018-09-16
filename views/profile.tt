@@ -14,7 +14,7 @@
 </tr>
           <% FOREACH bot IN bots %>
 <tr>
-<td><% bot.name %></td>
+<td><a href="/bot/<% bot.name %>"><% bot.name %></a></td>
 <td><% bot.elo %></td>
 <td><% bot.first_upload_date %></td>
 <td><% bot.last_upload_date %></td>

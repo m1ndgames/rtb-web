@@ -1,0 +1,67 @@
+<div id="page">
+      <% PROCESS sidebar.tt %>
+      <div id="content">
+        <% PROCESS header.tt %>
+          <h3>Bot Info</h3>
+
+<table>
+<tbody>
+<tr>
+<td>Name</td>
+<td>ELO</td>
+<td>Joined</td>
+<td>Updated</td>
+<td>Status</td>
+</tr>
+          <% FOREACH bot IN bots %>
+<tr>
+<td><% bot.name %></td>
+<td><% bot.elo %></td>
+<td><% bot.first_upload_date %></td>
+<td><% bot.last_upload_date %></td>
+<% IF bot.active %>
+<td>Active</td>
+<% ELSE %>
+<td>Not Active</td>
+<% END %>
+</td>
+</tr>
+          <% END %>
+</tbody>
+</table>
+
+<br>
+<br>
+<br>
+
+<h3>Results</h3>
+
+<table>
+<tbody>
+<tr>
+<td>ID</td>
+<td>Bot A</td>
+<td>Bot B</td>
+<td>Result</td>
+<td>Map</td>
+<td>ELO +/-</td>
+<td>Date</td>
+<td>Replay</td>
+</tr>
+          <% FOREACH result IN results %>
+<tr>
+<td><% result.id %></td>
+<td><a href="/bot/<% result.bot_a %>"><% result.bot_a %></a></td>
+<td><a href="/bot/<% result.bot_b %>"><% result.bot_b %></a></td>
+<td><% result.result %></td>
+<td><% result.mapname %></td>
+<td><% result.elochange_bot_a %>|<% results.elochange_bot_b %></td>
+<td><% result.date %></td>
+<td><a href="/replays/<% result.replayname %>">Replay</a></td>
+</tr>
+          <% END %>
+</tbody>
+</table>
+
+      </div>
+</div>
