@@ -16,20 +16,8 @@ engines:
       memcached_servers: 
         - 127.0.0.1:11211
   logger:
-    Console::Colored:
-      colored_origin: "cyan"
-      colored_levels:
-        core: "bold bright_white"
-        debug: "bold bright_blue"
-        info: "bold green"
-        warning: "bold yellow"
-        error: "bold yellow on_red"
-      colored_messages:
-        core: "bold bright_white"
-        debug: "bold bright_blue"
-        info: "bold green"
-        warning: "bold yellow"
-        error: "bold yellow on_red"
+    Console:
+      log_level: error
 
 plugins:
   Emailesque:
@@ -39,7 +27,7 @@ plugins:
     host: localhost
     port: 465
     user: info@ai-arena.net
-    pass: ***
+    pass: gb978302h849
   Auth::Extensible:
     disable_roles: 1
     no_default_pages: 1
@@ -54,7 +42,7 @@ plugins:
     host: localhost
     database: 'aiarena_db_1'
     username: aiarena
-    password: ***
+    password: nb89un8bgh978gh95
     connection_check_threshold: 10
     dbi_params:
       RaiseError: 1

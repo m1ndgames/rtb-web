@@ -9,8 +9,8 @@ use Template;
 use VT::API;
 use Data::Dumper;
 use POSIX qw(strftime);
-use File::Slurp;
-use utf8;
+#use File::Slurp;
+use DateTime;
 
 # Defines #############################################################################
 set behind_proxy => true;
@@ -35,7 +35,7 @@ hook 'database_connection_lost' => sub {
 
 # Get #################################################################################
 get '/' => sub {
-    template 'index' => { 'title' => 'RTB Online Arena' };
+    template 'index' => { 'title' => 'AI Arena' };
 };
 
 get '/api/results' => sub {
@@ -62,11 +62,105 @@ get '/api/bots' => sub {
     return($pretty_json);
 };
 
-get '/api/nextmatch' => sub {
+sub creatematchqueue {
     my $sth = database->prepare(
-        'SELECT * FROM bots where active = 1 order by rand() limit 2',
+        'SELECT * FROM bots where active = 1',
     );
     $sth->execute();
+    my $bots = $sth->fetchall_arrayref({});
+
+    my @botlist;
+    foreach (@{$bots}) {
+        push (@botlist, $_->{'name'});
+    }
+
+    my @matches;
+    foreach (@botlist) {
+        my $bot = $_;
+        foreach (@botlist) {
+            if ($bot eq $_) {
+                next;
+            } else {
+		my $match = {'bot1' => $bot, 'bot2' => $_};
+                push (@matches, $match);
+            }
+        }
+    }
+    my $json = JSON->new->allow_nonref;
+    my $pretty_json = $json->pretty->encode( \@matches );
+    open my $fh, ">", "matchqueue.json";
+    print $fh ($pretty_json);
+    close $fh;
+}
+
+get '/api/nextmatch' => sub {
+    my $params = params;
+    my $client_key = $params->{'apikey'};
+    if (!$client_key) {
+        $client_key = "nope123";
+    }
+
+    if (!-e 'matchqueue.json') {
+        &creatematchqueue();
+    }
+
+    # read the match queue
+    my $injson;
+    {
+        local $/;
+        open my $fh, "<", "matchqueue.json";
+        $injson = <$fh>;
+        close $fh;
+    }
+    my $in_json = decode_json($injson);
+
+    # find 1st match bots
+    my @bots = @{$in_json};
+    my @newbots;
+    my $bot1;
+    my $bot2;
+    foreach (@bots) {
+        if (!$_->{'bot1'} and !$_->{'bot2'}) {
+            next;
+        }
+        $bot1 = $_->{'bot1'};
+        $bot2 = $_->{'bot2'};
+        if ($client_key eq $apikey) {
+            $_->{'bot1'} = undef;
+            $_->{'bot2'} = undef;
+        
+
+            foreach (@bots) {
+                if ($_->{'bot1'} and $_->{'bot2'}) {
+                    push (@newbots, $_);
+                }
+            }    
+        }
+        last;
+    }
+
+    if ($client_key eq $apikey) {
+        my $matchcount = scalar @newbots;
+        print("Matches in Queue: $matchcount\n");
+
+        # write file
+        open my $fh, ">", "matchqueue.json";
+        my $filejson = JSON->new->allow_nonref;
+        print $fh $filejson->pretty->encode( \@newbots );
+        close $fh;
+
+        if ($matchcount <= 1) {
+            print("MatchQueue is empty - recreating\n");
+            &creatematchqueue();
+        }
+    }    
+
+    # get bot data from db
+    my $sth = database->prepare(
+        'SELECT * FROM bots where name = ? or name = ?',
+    );
+    $sth->execute($bot1, $bot2);
+
     my $bots = $sth->fetchall_arrayref({});
     my $json = JSON->new->allow_nonref;
     my $pretty_json = $json->pretty->encode( $bots );
@@ -121,12 +215,12 @@ get '/bot/:name' => sub {
     $sth->execute($name);
     my $bot_table = $sth->fetchall_arrayref({});
     my $sth2 = database->prepare(
-        'SELECT * FROM results where bot_a = ? OR bot_b = ?',
+        'SELECT * FROM results where bot_a = ? OR bot_b = ? order by id desc limit 50',
     );
     $sth2->execute($name, $name);
     my $results_table = $sth2->fetchall_arrayref({});
 
-    template 'bot' => { bots=> $bot_table, results=> $results_table };
+    template 'bot' => { name=>$name, bots=> $bot_table, results=> $results_table };
 };
 
 get '/maps' => sub {
@@ -254,20 +348,30 @@ post '/api/results' => sub {
         my $sth5 = database->prepare($sql5) or die database->errstr;
         $sth5->execute($result_b, $bot_b) or die $sth5->errstr;
 
+	my $dt = time;
+	my $sql6 = 'insert into elohistory (name, elo, date) values (?, ?, ?)';
+        my $sth6 = database->prepare($sql6) or die database->errstr;
+        $sth6->execute($bot_a, $bot_a_elo[0], $dt) or die $sth6->errstr;
+
+        my $sql7 = 'insert into elohistory (name, elo, date) values (?, ?, ?)';
+        my $sth7 = database->prepare($sql7) or die database->errstr;
+        $sth7->execute($bot_b, $bot_b_elo[0], $dt) or die $sth7->errstr;
+
     } else {
         return "nope";
     }
 };
 
 post '/api/uploadreplay' => sub {
-    my $params = params;
-    my $client_key = $params->{'apikey'};
-    my $filename = $params->{'filename'};
+    my $client_key = params->{'apikey'};
+    my $filename = params->{'filename'};
+    my $replay = request->upload('file');
+
+    print("Saving $filename to ./public/replays/$filename\n");
 
     if ($client_key eq $apikey) {
         my $path = "./public/replays/$filename";
-	open my $fh, '>:encoding(UTF-8)', $path or die "Couldn't write '$path': $!";
-	print $fh $params->{'replay'};
+	$replay->copy_to($path);
 
     } else {
          return "nope";

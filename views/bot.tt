@@ -3,7 +3,8 @@
       <div id="content">
         <% PROCESS header.tt %>
           <h3>Bot Info</h3>
-
+<img src="https://ai-arena.net/charts/<% name %>.png">
+<br><br>
 <table>
 <tbody>
 <tr>

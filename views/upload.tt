@@ -2,11 +2,10 @@
       <% PROCESS sidebar.tt %>
       <div id="content">
         <% PROCESS header.tt %>
-        <H3>Rules:</H3>
-        <li>Must be packed using zip, max size 10 MB</li>
-        <li>Uses either pysc2 or python-sc2 api wrapper</li>
-        <li>Python Version: 3.6</li>
         <br>
+        By uploading to this website you acknowledge that your IP address and username are saved till the Bot is removed from the Ladder.<br>
+        This is needed in case of hacking attempts, so it can be handed over to law enforcement.
+        <br><br>
         <form action="/upload" method="POST" enctype="multipart/form-data">
         <input type="file" name="file">
 	<label for="username">Botname:</label>
