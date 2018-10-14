@@ -11,6 +11,8 @@
 <td>Joined</td>
 <td>Updated</td>
 <td>Status</td>
+<td>Error Log</td>
+<td>Data</td>
 </tr>
           <% FOREACH bot IN bots %>
 <tr>
@@ -29,6 +31,20 @@
 <input type=hidden name=botname value=<% bot.name %>>
 <input type=submit value=Activate>
 <% END %>
+</form>
+</td>
+<td>
+<form action="/downloadlogfile" method=post>
+<input type=hidden name=requester value=<% user %>>
+<input type=hidden name=botname value=<% bot.name %>>
+<input type=submit value=Download>
+</form>
+</td>
+<td>
+<form action="/downloaddata" method=post>
+<input type=hidden name=requester value=<% user %>>
+<input type=hidden name=botname value=<% bot.name %>>
+<input type=submit value=Download>
 </form>
 </td>
 </tr>

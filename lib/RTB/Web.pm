@@ -153,6 +153,7 @@ get '/api/nextmatch' => sub {
             print("MatchQueue is empty - recreating\n");
             &creatematchqueue();
         }
+        &syncdata2bot('192.168.1.22', $bot1, $bot2);
     }    
 
     # get bot data from db
@@ -270,8 +271,7 @@ any ['get', 'post'] => '/profile' => require_login sub {
       $sth2->execute($author_id[0]);
       my $bots = $sth2->fetchall_arrayref({});
 
-
-      template 'profile' => { bots => $bots}
+      template 'profile' => { bots => $bots, user => $user->{username} }
     }
 };
 
@@ -293,6 +293,54 @@ post '/download' => sub {
         return send_file($botfile, system_path => 1);
     } else {
 	return "nope";
+    }
+};
+
+post '/downloadlogfile' => sub {
+    my $params = params;
+    my $requester = $params->{'requester'};
+    my $bot = $params->{'botname'};
+    my $sth = database->prepare(
+        'SELECT * FROM bots WHERE author_name = ? and name = ?',
+    );
+    $sth->execute($requester, $bot);
+    my @author = $sth->fetchrow_array;
+    if (!$author[0]) {
+        return;
+    }
+
+    my $authorname = $author[1];
+
+    if ($authorname eq $requester) {
+        chomp(my $dir = path(config->{appdir}, "botdata/$bot"));
+        my $botfile = "$dir/stderr.log";
+        return send_file($botfile, system_path => 1);
+    }
+};
+
+post '/downloaddata' => sub {
+    my $params = params;
+    my $requester = $params->{'requester'};
+    my $bot = $params->{'botname'};
+    my $sth = database->prepare(
+        'SELECT * FROM bots WHERE author_name = ? and name = ?',
+    );
+    $sth->execute($requester, $bot);
+    my @author = $sth->fetchrow_array;
+    if (!$author[0]) {
+        return;
+    }
+
+    my $authorname = $author[1];
+
+    if ($authorname eq $requester) {
+        chomp(my $dir = path(config->{appdir}, "botdata/$bot"));
+	chomp(my $zip = `which zip`);
+        chdir("$dir");
+        system("$zip -r /tmp/$bot\_data.zip data/");
+        my $datafile = "/tmp/$bot\_data.zip";
+        return send_file($datafile, system_path => 1);
+	unlink($datafile);
     }
 };
 
@@ -351,16 +399,35 @@ post '/api/results' => sub {
 	my $dt = time;
 	my $sql6 = 'insert into elohistory (name, elo, date) values (?, ?, ?)';
         my $sth6 = database->prepare($sql6) or die database->errstr;
-        $sth6->execute($bot_a, $bot_a_elo[0], $dt) or die $sth6->errstr;
 
         my $sql7 = 'insert into elohistory (name, elo, date) values (?, ?, ?)';
         my $sth7 = database->prepare($sql7) or die database->errstr;
         $sth7->execute($bot_b, $bot_b_elo[0], $dt) or die $sth7->errstr;
 
+        #TODO: Get server ip
+        &syncdatafrombot('192.168.1.22', $bot_a, $bot_b);
     } else {
         return "nope";
     }
 };
+
+sub syncdatafrombot {
+    my $server = shift;
+    my $bot_a = shift;
+    my $bot_b = shift;
+    chomp(my $perl = `which perl`);
+    my $fetch = "$perl ./syncfrombot.pl $server $bot_a $bot_b";
+    system($fetch);
+}
+
+sub syncdata2bot {
+    my $server = shift;
+    my $bot_a = shift;
+    my $bot_b = shift;
+    chomp(my $perl = `which perl`);
+    my $push = "$perl ./sync2bot.pl $server $bot_a $bot_b";
+    system($push);
+}
 
 post '/api/uploadreplay' => sub {
     my $client_key = params->{'apikey'};
@@ -372,7 +439,6 @@ post '/api/uploadreplay' => sub {
     if ($client_key eq $apikey) {
         my $path = "./public/replays/$filename";
 	$replay->copy_to($path);
-
     } else {
          return "nope";
     }
@@ -496,3 +562,4 @@ any '/logout' => sub {
 
 # EOF #################################################################################
 true;
+package RTB::Web;
