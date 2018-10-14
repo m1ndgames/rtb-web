@@ -3,8 +3,7 @@
       <div id="content">
         <% PROCESS header.tt %>
         <br>
-        By uploading to this website you acknowledge that your IP address and username are saved till the Bot is removed from the Ladder.<br>
-        This is needed in case of hacking attempts, so it can be handed over to law enforcement.
+        By uploading to this website you acknowledge that your IP address and username is saved till the bot is removed from the ladder.<br>
         <br><br>
         <form action="/upload" method="POST" enctype="multipart/form-data">
         <input type="file" name="file">

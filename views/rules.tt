@@ -5,35 +5,28 @@
           <h3>General Rules</h3>
           Bot authors must ensure that their creations are not harming the ladder system in any way, including but not limited to:<br><br>
           <li>Slowing down the system on purpose</li>
-          <li>Generating huge amounts of data on the disc, without purpose</li>
+          <li>Generating huge amounts of data on the disc without purpose</li>
           <li>Tempering with the filesystem or memory</li>
           <li>Network access of any kind besides connecting to the local sc2api process is strictly forbidden</li>
-          <li>Uploading copies (clones) of another bot is forbidden and they will be deleted by the staff</li>
+          <li>Uploading copies (clones) of another bot is forbidden</li>
 
           <h3>Bot Development</h3>
-          The Ladder supports currently Python 3.6 source and C++ Win32 Executables.<br>
-          To make sure the Bot is accepted by the Ladder you must follow the following standards:<br>
+          The Ladder supports currently Python 3.6<br>
+          To make sure the bot is accepted by the ladder you must follow the following standards:<br>
 
           <br>
           <b>Python:</b>
           <li>Python 3.6</li>
-          <li>pysc2 - latest pip version</li>
-          <li>python-sc2 - latest git master</li>
+          <li>pysc2 - latest pip version (updated every midnight)</li>
+          <li>python-sc2 - latest git master (updated every midnight)</li>
           <li>Bot called via run.py</li>
-          <a href="/downloads/python-example-bot.zip">Download</a> example Bot (soon).
-
-          <br>
-          <br>
-          <b>C++:</b>
-          <li>Bot called via Botname.exe</li>
-          <a href="/downloads/cpp-example-bot.zip">Download</a> example Bot (soon).
+          <a href="/downloads/python-example-bot.zip">Download</a> example Bot.
 
           <br>
           <br>
           For a successful upload the Bot must be packed using zip. (Max 10 MB)
           <br>
-          <br>
-          The bots may write to a ./data directory.
+          The bots may write to a ./data directory, this data can be downloaded via profile page.
           <br>
 
           <h3>Security</h3>
@@ -42,9 +35,9 @@
           <br>
           Network access is denied and will lead to a permanent ban from the ladder.
           <br>
-          The training Data is stored on another Server will be fetched before a Bot plays a new Game.
+          The training data is stored on another server will be fetched before a bot plays a new game.
 
           <h3>Match Queue</h3>
-          The match queue makes sure all Bots have to play against every other Bot on the Ladder. If the queue is empty a fresh one is generated containing all active Bots.
+          The match queue makes sure all Bots have to play against every other bot on the ladder. If the queue is empty a fresh one is generated containing all active bots. (Round-Robin)
       </div>
 </div>
