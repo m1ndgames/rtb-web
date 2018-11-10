@@ -7,7 +7,7 @@ use Chart::Clicker::Data::Series;
 use Chart::Clicker::Renderer::Area;
 use DBI;
 use Data::Dumper;
-system("cd /home/aiarena/rtb-web");
+chdir("/home/aiarena/rtb-web");
 
 my $database = 'aiarena_db_1';
 my $hostname = 'localhost';
