@@ -2,6 +2,7 @@
       <% PROCESS sidebar.tt %>
       <div id="content">
         <% PROCESS header.tt %>
+
 <table width="900">
 <tbody>
 <tr>
@@ -27,5 +28,9 @@
           <% END %>
 </tbody>
 </table>
+<p style="text-align:left;font-size:80%;">
+<b>Games in last 24h:</b> <% matchcount %><br>
+<b>Queued games:</b> <% queuesize %>
+</p>
       </div>
 </div>

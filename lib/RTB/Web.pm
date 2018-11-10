@@ -231,12 +231,33 @@ get '/stream' => sub {
 
 get '/results' => sub {
     my $sth = database->prepare(
-        'SELECT * FROM results ORDER BY id DESC LIMIT 25',
+        'SELECT * FROM results ORDER BY id DESC LIMIT 35',
     );
     $sth->execute();
     my $results = $sth->fetchall_arrayref({});
 
-    template 'results' => { results => $results}
+    my $sth2 = database->prepare(
+        'SELECT * FROM results WHERE date > DATE_SUB(NOW(), INTERVAL 24 HOUR)',
+    );
+    $sth2->execute();
+    my $results_24h = $sth2->fetchall_arrayref({});
+    my $results_24h_count = scalar @{ $results_24h };
+
+    # read the match queue
+    my $matchqueuefile;
+    {
+        local $/;
+        open my $fh, "<", "matchqueue.json";
+        $matchqueuefile = <$fh>;
+        close $fh;
+    }
+    my $matchqueue = decode_json($matchqueuefile);
+    my $queuesize = scalar @{ $matchqueue };
+    if (!$queuesize) {
+	$queuesize = 0;
+    }
+
+    template 'results' => { results => $results, matchcount => $results_24h_count, queuesize => $queuesize }
 };
 
 get '/ranking' => sub {
