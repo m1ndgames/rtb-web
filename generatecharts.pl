@@ -7,12 +7,15 @@ use Chart::Clicker::Data::Series;
 use Chart::Clicker::Renderer::Area;
 use DBI;
 use Data::Dumper;
+system("cd /home/aiarena/rtb-web");
 
 my $database = 'aiarena_db_1';
 my $hostname = 'localhost';
 my $port = '3306';
 my $user = 'aiarena';
 my $pass = 'nb89un8bgh978gh95';
+
+chdir('/home/aiarena/rtb-web/');
 
 my $dsn = "DBI:mysql:database=$database;host=$hostname;port=$port";
 my $dbh = DBI->connect($dsn, $user, $pass);
@@ -29,6 +32,7 @@ $sth->finish;
 # Read the ELO History of each Bot
 sub getdata {
 	my $name = shift;
+	print("Reading elohistory of $name\n");
         my $sth = $dbh->prepare('SELECT elo, date FROM elohistory where name = ?',);
 	$sth->execute($name);
 	my $elotable = $sth->fetchall_arrayref({});
@@ -40,8 +44,9 @@ sub getdata {
 sub createchart {
 	my $name = shift;
 	my $history = shift;
+	#print Dumper ($history);
 
-	my $cc = Chart::Clicker->new(width => 500, height => 400);
+	my $cc = Chart::Clicker->new(width => 800, height => 400);
 
 	my @elo;
 	my @date;

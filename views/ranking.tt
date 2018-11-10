@@ -2,20 +2,21 @@
       <% PROCESS sidebar.tt %>
       <div id="content">
         <% PROCESS header.tt %>
-<h3>Ranking:</h3>
 
-<table id="resultsTable">
+<table width="900" id="resultsTable">
 <tbody>
 <tr>
-<td>ELO</td>
-<td>Name</td>
-<td>Author</td>
+<td align="center"><b>ELO</b></td>
+<td align="center"><b>Name</b></td>
+<td align="center"><b>Author</b></td>
+<td align="center"><b>Type</b></td>
 </tr>
           <% FOREACH bot IN bots %>
 <tr>
-<td><% bot.elo %></td>
-<td><a href="/bot/<% bot.name %>"><% bot.name %></a></td>
-<td><% bot.author_name %></td>
+<td align="center"><% bot.elo %></td>
+<td align="center"><a href="/bot/<% bot.name %>"><% bot.name %></a></td>
+<td align="center"><% bot.author_name %></td>
+<td align="center"><% bot.bottype %></td>
 </tr>
           <% END %>
 </tbody>

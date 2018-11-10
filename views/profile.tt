@@ -2,25 +2,24 @@
       <% PROCESS sidebar.tt %>
       <div id="content">
         <% PROCESS header.tt %>
-          <h3>Profile</h3>
-<table>
+<table width="900">
 <tbody>
 <tr>
-<td>Name</td>
-<td>ELO</td>
-<td>Joined</td>
-<td>Updated</td>
-<td>Status</td>
-<td>Error Log</td>
-<td>Data</td>
+<td align="center"><b>Name</b></td>
+<td align="center"><b>ELO</b></td>
+<td align="center"><b>Joined</b></td>
+<td align="center"><b>Updated</b></td>
+<td align="center"><b>Status</b></td>
+<td align="center"><b>Error Log</b></td>
+<td align="center"><b>Data</b></td>
 </tr>
           <% FOREACH bot IN bots %>
 <tr>
-<td><a href="/bot/<% bot.name %>"><% bot.name %></a></td>
-<td><% bot.elo %></td>
-<td><% bot.first_upload_date %></td>
-<td><% bot.last_upload_date %></td>
-<td>
+<td align="center"><a href="/bot/<% bot.name %>"><% bot.name %></a></td>
+<td align="center"><% bot.elo %></td>
+<td align="center"><% bot.first_upload_date %></td>
+<td align="center"><% bot.last_upload_date %></td>
+<td align="center">
 <form action="/profile" method=post>
 <% IF bot.active %>
 <input type=hidden name=action value=deactivate>
@@ -33,14 +32,14 @@
 <% END %>
 </form>
 </td>
-<td>
+<td align="center">
 <form action="/downloadlogfile" method=post>
 <input type=hidden name=requester value=<% user %>>
 <input type=hidden name=botname value=<% bot.name %>>
 <input type=submit value=Download>
 </form>
 </td>
-<td>
+<td align="center">
 <form action="/downloaddata" method=post>
 <input type=hidden name=requester value=<% user %>>
 <input type=hidden name=botname value=<% bot.name %>>

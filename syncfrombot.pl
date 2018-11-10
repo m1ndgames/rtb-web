@@ -12,12 +12,14 @@ foreach (@bots) {
 	my $arenastderrpath = "/home/sc2/arena_ladder/bots/$_/stderr.log";
 
 	# Ladder = Storage
-	system("mkdir -p /home/aiarena/rtb-web/botdata/$_/data/");
 	my $ladderpath = "/home/aiarena/rtb-web/botdata/$_/data/";
 	my $ladderstderrpath = "/home/aiarena/rtb-web/botdata/$_/stderr.log";
 
+	system("mkdir -p /home/aiarena/rtb-web/botdata/$_/data/");
+
 	chomp(my $rsyncbin = `which rsync`);
 
-	system("$rsyncbin -a $sshuser\@$remote_host:$arenapath $ladderpath");
-	system("$rsyncbin $sshuser\@$remote_host:$arenastderrpath $ladderstderrpath");
+	print("Syncing Data from Bot\n");
+	system("$rsyncbin -auz $sshuser\@$remote_host:$arenapath $ladderpath &");
+	system("$rsyncbin -auz $sshuser\@$remote_host:$arenastderrpath $ladderstderrpath");
 }

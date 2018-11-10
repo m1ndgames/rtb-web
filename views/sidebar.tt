@@ -23,6 +23,7 @@
               <li><a href="/results">results</a></li>
               <li><a href="/maps">maps</a></li>
               <li><a href="/rules">rules</a></li>
+              <li><a href="/contribute">contribute</a></li>
               <li><a href="/stream">stream</a></li>
             </ul>
           </li>
@@ -30,6 +31,7 @@
           <li>
             <h3>links</h3>
             <ul class="links">
+              <li><a href="https://discord.gg/kQFtbvY"</a>Discord</a></li>
               <li><a href="https://github.com/Dentosal/python-sc2">python-sc2</a></li>
               <li><a href="https://github.com/Blizzard/s2client-proto#downloads">StarCraft II</a></li>
               <li><a href="https://sc2ai.net">Starcraft 2 AI Ladder</a></li>

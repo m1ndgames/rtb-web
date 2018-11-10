@@ -24,7 +24,7 @@ text-decoration: none;
 
 #page {
 background-color: rgba(0, 0, 0, 0);
-width: 800px;
+width: 1200px;
 margin: auto;
 margin-left: auto;
 padding-left: 0px;
@@ -36,12 +36,13 @@ background-color: rgba(45, 76, 32, 0.52);
 border: 3px solid rgba(4, 4, 4, 0.45);
 border-top;
 padding: 25px;
-width: 500px;
+box-sizing: border-box;
+width: 85.0%;
 }
 
 #sidebar {
 float: right;
-width: 175px;
+width: 12.0%;
 }
 
 #header, #about, #getting-started {
@@ -49,6 +50,9 @@ padding-left: 75px;
 padding-right: 30px;
 }
 
+iframe {
+  max-width: 100%;
+}
 
 #header {
 height: 64px;

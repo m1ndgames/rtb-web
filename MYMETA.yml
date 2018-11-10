@@ -1,0 +1,25 @@
+---
+abstract: RTB
+author:
+  - 'm1ndfuck <m1ndfuck@m1ndfuck.de>'
+build_requires:
+  ExtUtils::MakeMaker: '0'
+configure_requires:
+  ExtUtils::MakeMaker: '0'
+dynamic_config: 0
+generated_by: 'ExtUtils::MakeMaker version 7.34, CPAN::Meta::Converter version 2.150005'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: '1.4'
+name: RTB-Web
+no_index:
+  directory:
+    - t
+    - inc
+requires:
+  Dancer2: '0.205'
+  Test::More: '0'
+  YAML: '0'
+version: '0.1'
+x_serialization_backend: 'CPAN::Meta::YAML version 0.018'

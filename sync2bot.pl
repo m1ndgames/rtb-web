@@ -10,7 +10,11 @@ foreach (@bots) {
 	my $arenapath = "/home/sc2/arena_ladder/bots/$_/data/";
 	my $ladderpath = "/home/aiarena/rtb-web/botdata/$_/data/";
 
+	system("mkdir -p $ladderpath");
+	system("ssh sc2\@ladder mkdir -p $arenapath");
+
 	chomp(my $rsyncbin = `which rsync`);
 
-	system("$rsyncbin -a $ladderpath $sshuser\@$remote_host:$arenapath");
+        print("Syncing Data to Bot\n");
+	system("$rsyncbin -auz $ladderpath $sshuser\@$remote_host:$arenapath");
 }

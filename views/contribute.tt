@@ -1,0 +1,14 @@
+<div id="page">
+      <% PROCESS sidebar.tt %>
+      <div id="content">
+        <% PROCESS header.tt %>
+          <h3>Contribute</h3>
+          Website: <a href="https://github.com/m1ndgames/rtb-web">GitHub</a><br>
+          LadderServer: <a href="https://github.com/m1ndgames/arena_ladder">GitHub</a><br><br>
+          <br>
+          Besides Website and LadderServer code, there is currently need for the following:<br>
+          <li>StarCraft 2 MiniGame maps</li>
+          <li>Website CSS</li>
+          <li>Website overall Design</li>
+      </div>
+</div>

@@ -11,13 +11,15 @@ use Data::Dumper;
 use POSIX qw(strftime);
 #use File::Slurp;
 use DateTime;
+use Array::Shuffle qw(shuffle_array);
+use MIME::Lite;
 
 # Defines #############################################################################
 set behind_proxy => true;
 set no_default_pages => true;
 our $VERSION = '0.1';
 my $vtapi = VT::API->new(key => '1c55d0f05c41f83e9897c5964324b9a8d191b7fc35bd30c0f4d26ecbaf329700');
-my $apikey = 'g97nb8n832x7b6ne9897c5964324b9a8d191b7fc35bd30c0f4d26ecbaf329700';
+my $apikey = 'g97nb8n832x7bzu38z3%C3%83%C2%9F95964324b9a8d191b7fc35bd30c0f4d26ecbaf329700';
 
 # Subs ###############################################################################
 sub login_page_handler {
@@ -26,6 +28,38 @@ sub login_page_handler {
 
 sub permission_denied_page_handler {
     template 'denied';
+}
+
+sub sendcrashmail {
+    my $botname = shift;
+    my $sth = database->prepare(
+        'SELECT author_name FROM bots WHERE name = ?',
+    );
+    $sth->execute($botname);
+    my @author = $sth->fetchrow_array;
+
+    my $sth2 = database->prepare(
+        'SELECT email FROM users WHERE username = ?',
+    );
+    $sth2->execute($author[0]);
+    my @author_email = $sth2->fetchrow_array;
+
+    my $msg = MIME::Lite->new(
+    	From    => 'ladder@ai-arena.net',
+    	To      => $author_email[0],
+    	Cc      => 'florian.luettgens+botcrash@gmail.com',
+    	Subject => 'Your Bot has crashed',
+    	Type    => 'TEXT',
+	Data     => "Please find attached stderr.log"
+    );
+
+    $msg->attach(
+    	Type     => 'TEXT',
+    	Path     => "botdata/$botname/stderr.log",
+        Filename => 'stderr.log',
+    );
+
+    $msg->send;
 }
 
 # Hooks ###############################################################################
@@ -40,7 +74,7 @@ get '/' => sub {
 
 get '/api/results' => sub {
     my $sth = database->prepare(
-        'SELECT * FROM results',
+        'SELECT * FROM results order by id desc limit 100',
     );
     $sth->execute();
     my $results = $sth->fetchall_arrayref({});
@@ -73,6 +107,7 @@ sub creatematchqueue {
     foreach (@{$bots}) {
         push (@botlist, $_->{'name'});
     }
+    shuffle_array(@botlist);
 
     my @matches;
     foreach (@botlist) {
@@ -97,6 +132,7 @@ get '/api/nextmatch' => sub {
     my $params = params;
     my $client_key = $params->{'apikey'};
     if (!$client_key) {
+	print("Showing nextmatch without API key\n");
         $client_key = "nope123";
     }
 
@@ -126,6 +162,7 @@ get '/api/nextmatch' => sub {
         $bot1 = $_->{'bot1'};
         $bot2 = $_->{'bot2'};
         if ($client_key eq $apikey) {
+            print("Got API key - Removing $_->{'bot1'} and $_->{'bot2'}\n");
             $_->{'bot1'} = undef;
             $_->{'bot2'} = undef;
         
@@ -153,7 +190,7 @@ get '/api/nextmatch' => sub {
             print("MatchQueue is empty - recreating\n");
             &creatematchqueue();
         }
-        &syncdata2bot('192.168.1.22', $bot1, $bot2);
+        &syncdata2bot('ladder', $bot1, $bot2);
     }    
 
     # get bot data from db
@@ -178,6 +215,10 @@ get '/uploadsuccess' => require_login sub {
 
 get '/register' => sub {
     template 'register';
+};
+
+get '/contribute' => sub {
+    template 'contribute';
 };
 
 get '/rules' => sub {
@@ -215,6 +256,7 @@ get '/bot/:name' => sub {
     );
     $sth->execute($name);
     my $bot_table = $sth->fetchall_arrayref({});
+
     my $sth2 = database->prepare(
         'SELECT * FROM results where bot_a = ? OR bot_b = ? order by id desc limit 50',
     );
@@ -228,8 +270,16 @@ get '/maps' => sub {
     template 'maps';
 };
 
-get '/maps/randorena' => sub {
-    template 'maps_randorena';
+get '/maps/arena_1' => sub {
+    template 'maps_arena_1';
+};
+
+get '/maps/arena_2' => sub {
+    template 'maps_arena_2';
+};
+
+get '/maps/arena_3' => sub {
+    template 'maps_arena_3';
 };
 
 get '/login' => sub {
@@ -338,6 +388,7 @@ post '/downloaddata' => sub {
 	chomp(my $zip = `which zip`);
         chdir("$dir");
         system("$zip -r /tmp/$bot\_data.zip data/");
+        chdir('/home/aiarena/rtb-web');
         my $datafile = "/tmp/$bot\_data.zip";
         return send_file($datafile, system_path => 1);
 	unlink($datafile);
@@ -370,19 +421,44 @@ post '/api/results' => sub {
 
         my $result_a;
         my $result_b;
-        if (($result eq 'Player1Win') || ($result eq 'Player2Crash')) {
-	    $result_a = &elo($bot_a_elo[0], $bot_b_elo[0], 1.0);
-            $result_b = &elo($bot_b_elo[0], $bot_a_elo[0], 0.0);
-        } elsif (($result eq 'Player2Win') || ($result eq 'Player1Crash')) {
-            $result_a = &elo($bot_a_elo[0], $bot_b_elo[0], 0.0);
-            $result_b = &elo($bot_b_elo[0], $bot_a_elo[0], 1.0);
-        } elsif (($result eq 'GameTimeout') || ($result eq 'Tie')) {
-            $result_a = &elo($bot_a_elo[0], $bot_b_elo[0], 0.5);
-            $result_b = &elo($bot_b_elo[0], $bot_a_elo[0], 0.5);
+
+	if ($result eq 'Player1Win') {
+	    ($result_a, $result_b) = &elo($bot_a_elo[0], $bot_b_elo[0], 1.0);
         }
 
-	my $elo_a_change = $bot_a_elo[0] - $result_a;
-        my $elo_b_change = $bot_b_elo[0] - $result_b;
+	if ($result eq 'Player2Win') {
+	    ($result_a, $result_b) = &elo($bot_a_elo[0], $bot_b_elo[0], 0.0);
+        }
+
+	if (($result eq 'GameTimeout') or ($result eq 'Tie')) {
+            #$result_a = &elo($bot_a_elo[0], $bot_b_elo[0], 0.5);
+            #$result_b = &elo($bot_b_elo[0], $bot_a_elo[0], 0.5);
+	    ($result_a, $result_b) = &elo($bot_a_elo[0], $bot_b_elo[0], 0.5);
+        }
+
+	if ($result eq 'Player1Crash') {
+            $result_b = $bot_b_elo[0] + 5;
+            $result_a = $bot_a_elo[0] - 10;
+            my $sql = 'update bots set active = ? where name = ?';
+            my $sth = database->prepare($sql) or die database->errstr;
+            $sth->execute(0, $bot_a) or die $sth->errstr;
+	    unlink('matchqueue.json');
+	    &sendcrashmail($bot_a);
+        }
+
+	if ($result eq 'Player2Crash') {
+            $result_a = $bot_a_elo[0] + 5;
+            $result_b = $bot_b_elo[0] - 10;
+
+	    my $sql = 'update bots set active = ? where name = ?';
+      	    my $sth = database->prepare($sql) or die database->errstr;
+            $sth->execute(0, $bot_b) or die $sth->errstr;
+	    unlink('matchqueue.json');
+	    &sendcrashmail($bot_b);
+        }
+
+	my $elo_a_change = $result_a - $bot_a_elo[0];
+        my $elo_b_change = $result_b - $bot_b_elo[0];
 
         my $sql3 = 'insert into results (bot_a, bot_b, result, elochange_bot_a, elochange_bot_b, mapname, gametime, winner, replayname) values (?, ?, ?, ?, ?, ?, ?, ?, ?)';
         my $sth3 = database->prepare($sql3) or die database->errstr;
@@ -399,13 +475,14 @@ post '/api/results' => sub {
 	my $dt = time;
 	my $sql6 = 'insert into elohistory (name, elo, date) values (?, ?, ?)';
         my $sth6 = database->prepare($sql6) or die database->errstr;
+	$sth6->execute($bot_a, $result_a, $dt) or die $sth6->errstr;
 
         my $sql7 = 'insert into elohistory (name, elo, date) values (?, ?, ?)';
         my $sth7 = database->prepare($sql7) or die database->errstr;
-        $sth7->execute($bot_b, $bot_b_elo[0], $dt) or die $sth7->errstr;
+        $sth7->execute($bot_b, $result_b, $dt) or die $sth7->errstr;
 
         #TODO: Get server ip
-        &syncdatafrombot('192.168.1.22', $bot_a, $bot_b);
+        &syncdatafrombot('ladder', $bot_a, $bot_b);
     } else {
         return "nope";
     }
@@ -416,7 +493,7 @@ sub syncdatafrombot {
     my $bot_a = shift;
     my $bot_b = shift;
     chomp(my $perl = `which perl`);
-    my $fetch = "$perl ./syncfrombot.pl $server $bot_a $bot_b";
+    my $fetch = "$perl ./syncfrombot.pl $server $bot_a $bot_b &";
     system($fetch);
 }
 
@@ -425,7 +502,7 @@ sub syncdata2bot {
     my $bot_a = shift;
     my $bot_b = shift;
     chomp(my $perl = `which perl`);
-    my $push = "$perl ./sync2bot.pl $server $bot_a $bot_b";
+    my $push = "$perl ./sync2bot.pl $server $bot_a $bot_b &";
     system($push);
 }
 
@@ -454,7 +531,7 @@ sub elo {
 	my $rating1 = shift;
 	my $rating2 = shift;
 	my $actual = shift;
-	my $elo_k = 24;
+	my $elo_k = 32;
 
 	my $delta = $elo_k * ($actual - &expected_win_rate($rating1, $rating2));
 	return ($rating1 + $delta, $rating2 - $delta);
@@ -475,6 +552,7 @@ post '/register' => sub {
 post '/upload' => require_login sub {
     my $user = logged_in_user;
     my $botname = params->{botname};
+    my $bottype = params->{bottype};
     my $data = request->upload('file');
     my $path;
  
@@ -488,6 +566,10 @@ post '/upload' => require_login sub {
     my $extension;
     if ($uploadname =~ /.+\.(.+)/) {
         $extension = $1;
+    }
+
+    if ($botname !~ /^\w+$/) {
+	return "Name can only be alphanumeric + underscores";
     }
 
     if ($filesize > $maxfilesize) {
@@ -523,15 +605,15 @@ post '/upload' => require_login sub {
 
     # Bot already exists
     if(exists($bots{$botname})) {
-        my $sql3 = 'update bots set last_upload_date = ? , filesize = ? , md5hash = ? where author_id = ? and name = ?';
+        my $sql3 = 'update bots set last_upload_date = ? , filesize = ? , md5hash = ?, bottype = ? where author_id = ? and name = ?';
         my $sth3 = database->prepare($sql3) or die database->errstr;
         my $now = strftime "%Y-%m-%d %H:%M:%S", localtime;
-        $sth3->execute($now, $filesize, $filehash, $author_id[0], $botname) or die $sth3->errstr;
+        $sth3->execute($now, $filesize, $filehash, $bottype, $author_id[0], $botname) or die $sth3->errstr;
     # Its new
     } else {
-        my $sql3 = 'insert into bots (author_id, author_name, name, filename, filesize, md5hash) values (?, ?, ?, ?, ?, ?)';
+        my $sql3 = 'insert into bots (author_id, author_name, name, filename, filesize, md5hash, bottype) values (?, ?, ?, ?, ?, ?, ?)';
         my $sth3 = database->prepare($sql3) or die database->errstr;
-        $sth3->execute($author_id[0], $user->{username}, $botname, $filename, $filesize, $filehash) or die $sth3->errstr;
+        $sth3->execute($author_id[0], $user->{username}, $botname, $filename, $filesize, $filehash, $bottype) or die $sth3->errstr;
     }
 
     # TODO: display error on upload page instead of return

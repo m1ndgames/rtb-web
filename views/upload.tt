@@ -9,6 +9,14 @@
         <input type="file" name="file">
 	<label for="username">Botname:</label>
         <input type="text" name="botname" id="botname">
+	<select name="bottype">
+	<option value="python">Python 3.6</option>
+	<option value="wine">C++ (windows)</option>
+        <option value="binarycpp">C++ (linux)</option>
+	<option value="java">Java 8</option>
+        <option value="dotnetcore">DotNetCore</option>
+        <option value="golang">Go</option>
+	</select>
         <input type="submit" name="submit" value="Upload">
         </form>
       </div>
