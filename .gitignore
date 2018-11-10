@@ -1,0 +1,9 @@
+public/replays/*
+botdata/*
+botuploads/*
+public/charts/*
+logs/*
+caches/*
+matchqueue.json
+config.yml
+screenlog.0
