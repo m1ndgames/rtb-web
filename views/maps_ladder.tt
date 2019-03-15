@@ -1,0 +1,9 @@
+<div id="page">
+      <% PROCESS sidebar.tt %>
+      <div id="content">
+        <% PROCESS header.tt %>
+          <h3>The current Ladder Maps</h3>
+          <br>
+          <a href="/dl/maps/LadderMaps.zip">Download</a> the map pack.</div>
+      </div>
+</div>

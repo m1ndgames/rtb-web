@@ -9,13 +9,13 @@ use DBI;
 use Data::Dumper;
 chdir("/home/aiarena/rtb-web");
 
-my $database = 'aiarena_db_1';
+my $database = 'aiarena';
 my $hostname = 'localhost';
 my $port = '3306';
 my $user = 'aiarena';
-my $pass = 'nb89un8bgh978gh95';
+my $pass = 'bTs8aum3';
 
-chdir('/home/aiarena/rtb-web/');
+chdir('/home/m1nd/rtb-web/');
 
 my $dsn = "DBI:mysql:database=$database;host=$hostname;port=$port";
 my $dbh = DBI->connect($dsn, $user, $pass);
@@ -37,19 +37,24 @@ sub getdata {
 	$sth->execute($name);
 	my $elotable = $sth->fetchall_arrayref({});
 
-	&createchart($name,$elotable);
+	if ($elotable) {
+		&createchart($name,$elotable);
+	}
 }
 
 # Create a chart for each Bot
 sub createchart {
 	my $name = shift;
 	my $history = shift;
-	#print Dumper ($history);
 
 	my $cc = Chart::Clicker->new(width => 800, height => 400);
 
 	my @elo;
 	my @date;
+	if (!$elo[0]) {
+		return;
+	}
+
 	foreach (@$history) {
 		push (@elo, $_->{'elo'});
                 push (@date, $_->{'date'});

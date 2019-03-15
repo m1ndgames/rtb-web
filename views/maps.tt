@@ -3,29 +3,7 @@
       <div id="content">
         <% PROCESS header.tt %>
           <h3>Maps</h3>
-          The current map pool contains the following maps:<br><br>
-		  <table>
-		  <tbody>
-			<tr>
-			<td><img src="/images/maps/arena_1_small.png" alt="maps_arena_1_small" /></td>
-			<td><a href="/maps/arena_1">AI-Arena I</a><br />
-			Micro Arena I
-			</td>
-			</tr>
-			<tr>
-			<td><img src="/images/maps/arena_2_small.png" alt="maps_arena_2_small" /></td>
-			<td><a href="/maps/arena_2">AI-Arena II</a><br />
-			Micro Arena II
-			</td>
-			</tr>
-			<tr>
-			<td><img src="/images/maps/arena_3_small.png" alt="maps_arena_3_small" /></td>
-			<td><a href="/maps/arena_3">AI-Arena III</a><br />
-			Micro Arena III
-			</td>
-		        </tr>
-		</tbody>
-	  </table>
-	  <a href="/dl/MapPack.zip">Download</a> the map pack.</div>
+          <a href="/maps/arcade">Arcade Map Pool</a><br>
+          <a href="/maps/ladder">Ladder Map Pool</a><br>
     </div>
 </div>

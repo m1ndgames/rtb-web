@@ -12,19 +12,29 @@
               <li><a href="/logout">logout</a></li>
               <% END %>
               <li><a href=""></a></li>
+              <li><a href="/rules">rules</a></li>
+              <li><a href="/contribute">contribute</a></li>
+              <li><a href="/stream">stream</a></li>
             </ul>
           </li>
 
           <li>
-            <h3>games</h3>
+            <h3>arcade</h3>
             <ul class="links">
               <li>
-              <li><a href="/ranking">ranking</a></li>
-              <li><a href="/results">results</a></li>
-              <li><a href="/maps">maps</a></li>
-              <li><a href="/rules">rules</a></li>
-              <li><a href="/contribute">contribute</a></li>
-              <li><a href="/stream">stream</a></li>
+              <li><a href="/ranking/arcade">ranking</a></li>
+              <li><a href="/results/arcade">results</a></li>
+              <li><a href="/maps/arcade">maps</a></li>
+            </ul>
+          </li>
+
+          <li>
+            <h3>ladder</h3>
+            <ul class="links">
+              <li>
+              <li><a href="/ranking/ladder">ranking</a></li>
+              <li><a href="/results/ladder">results</a></li>
+              <li><a href="/maps/ladder">maps</a></li>
             </ul>
           </li>
 

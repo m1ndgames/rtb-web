@@ -1,0 +1,53 @@
+<div id="page">
+      <% PROCESS sidebar.tt %>
+      <div id="content">
+        <% PROCESS header.tt %>
+          <h3>AI Arena I</h3>
+          Rounds 1+2:<br>
+          10x Marines VS 4x Stalkers<br><br>
+
+          Rounds 3+4:<br>
+          4x Marines VS 2x Zealots<br><br>
+
+          Rounds 5+6:<br>
+          1x Reaper VS 5x Zerglings<br>
+
+          <br><br>
+          Timer: 5 minutes per match
+          <br>
+          Download: <a href="/dl/maps/arcade/AI-Arena_I.SC2Map">Ladder Version</a> - <a href="/dl/AI-Arena_I_training.SC2Map">Training Version</a>
+
+          <h3>AI Arena II</h3>
+          Rounds 1+2:<br>
+          10x Zerglings VS 2x Sentries + 1x Adept<br><br>
+
+          Rounds 3+4:<br>
+          2x Reapers VS 5x Zealots<br><br>
+
+          Rounds 5+6:<br>
+          5x Stalkers VS 5x Stalkers<br>
+
+          <br><br>
+          Timer: 5 minutes per match
+          <br>
+          Download: <a href="/dl/maps/arcade/AI-Arena_II.SC2Map">Ladder Version</a> - <a href="/dl/AI-Arena_II_training.SC2Map">Training Version</a>
+
+          <h3>AI Arena III</h3>
+          Rounds 1+2:<br>
+          10x Marines + 2x Marauders VS 2x Stalkers<br><br>
+
+          Rounds 3+4:<br>
+          4x Marines VS 2x Zealots<br><br>
+
+          Rounds 5+6:<br>
+          1x Reaper VS 5x Zerglings<br>
+
+          <br><br>
+          Timer: 5 minutes per match
+          <br>
+          Download: <a href="/dl/maps/arcade/AI-Arena_III.SC2Map">Ladder Version</a> - <a href="/dl/AI-Arena_III_training.SC2Map">Training Version</a>
+
+          <br><br>
+          <a href="/dl/maps/MapPack.zip">Download</a> the map pack.</div>
+      </div>
+</div>

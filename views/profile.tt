@@ -50,5 +50,56 @@
           <% END %>
 </tbody>
 </table>
+
+<br><br>
+<h3>Map Pools</h2>
+<table width="500">
+<tbody>
+<tr>
+<td align="center"><b>Name</b></td>
+<td align="center"><b>Arcade</b></td>
+<td align="center"><b>Ladder</b></td>
+</tr>
+          <% FOREACH bot IN bots %>
+<tr>
+<td align="center"><a href="/bot/<% bot.name %>"><% bot.name %></a></td>
+
+
+<td align="center">
+<form action="/profile/arcade" method=post>
+<% IF bot.arcade_active %>
+<input type=hidden name=action value=deactivate_arcade>
+<input type=hidden name=botname value=<% bot.name %>>
+<input type=submit value=Deactivate>
+<% ELSE %>
+<input type=hidden name=action value=activate_arcade>
+<input type=hidden name=botname value=<% bot.name %>>
+<input type=submit value=Activate>
+<% END %>
+</form>
+</td>
+
+
+<td align="center">
+<form action="/profile/ladder" method=post>
+<% IF bot.ladder_active %>
+<input type=hidden name=action value=deactivate_ladder>
+<input type=hidden name=botname value=<% bot.name %>>
+<input type=submit value=Deactivate>
+<% ELSE %>
+<input type=hidden name=action value=activate_ladder>
+<input type=hidden name=botname value=<% bot.name %>>
+<input type=submit value=Activate>
+<% END %>
+</form>
+
+
+
+</td>
+</tr>
+          <% END %>
+</tbody>
+</table>
+
       </div>
 </div>

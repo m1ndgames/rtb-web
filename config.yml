@@ -4,10 +4,6 @@ charset: "UTF-8"
 session: Memcached
 template: "template_toolkit"
 
-aiarena:
-  apikey: "g97nb8n832x7bzu38z3%C3%83%C2%9F95964324b9a8d191b7fc35bd30c0f4d26ecbaf329700"
-  ladderserverhost: "ladder"
-
 engines:
   template:
     template_toolkit:
@@ -44,10 +40,10 @@ plugins:
   Database:
     driver: mysql
     host: localhost
-    database: 'aiarena_db_1'
+    database: 'aiarena'
     username: aiarena
-    password: nb89un8bgh978gh95
-    connection_check_threshold: 10
+    password: bTs8aum3
+    connection_check_threshold: 30
     dbi_params:
       RaiseError: 1
       AutoCommit: 1

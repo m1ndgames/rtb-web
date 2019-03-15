@@ -13,10 +13,10 @@
 
 
 -- Exportiere Datenbank Struktur für aiarena_db_1
-CREATE DATABASE IF NOT EXISTS `aiarena_db_1` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
-USE `aiarena_db_1`;
+CREATE DATABASE IF NOT EXISTS `aiarena` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+USE `aiarena`;
 
--- Exportiere Struktur von Tabelle aiarena_db_1.bots
+-- Exportiere Struktur von Tabelle aiarena.bots
 CREATE TABLE IF NOT EXISTS `bots` (
   `author_id` int(11) NOT NULL,
   `author_name` varchar(50) NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `bots` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Daten Export vom Benutzer nicht ausgewählt
--- Exportiere Struktur von Tabelle aiarena_db_1.elohistory
+-- Exportiere Struktur von Tabelle aiarena.elohistory
 CREATE TABLE IF NOT EXISTS `elohistory` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `elohistory` (
 ) ENGINE=InnoDB AUTO_INCREMENT=685 DEFAULT CHARSET=utf8mb4;
 
 -- Daten Export vom Benutzer nicht ausgewählt
--- Exportiere Struktur von Tabelle aiarena_db_1.results
+-- Exportiere Struktur von Tabelle aiarena.results
 CREATE TABLE IF NOT EXISTS `results` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `bot_a` varchar(50) NOT NULL,
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `results` (
 ) ENGINE=InnoDB AUTO_INCREMENT=373 DEFAULT CHARSET=utf8mb4;
 
 -- Daten Export vom Benutzer nicht ausgewählt
--- Exportiere Struktur von Tabelle aiarena_db_1.users
+-- Exportiere Struktur von Tabelle aiarena.users
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(50) NOT NULL,
